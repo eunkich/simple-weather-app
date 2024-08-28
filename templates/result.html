@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-height: 100%;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .weather-info {
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .icon {
+            margin-top: 10px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .forecast {
+            margin-top: 20px;
+        }
+
+        .forecast-item {
+            margin: 10px 0;
+        }
+
+        .back-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Weather in {{ city }}</h1>
+        {% if error %}
+        <div class="error-message">
+            <p>{{ error_message }}</p>
+        </div>
+        {% else %}
+        <div class="weather-info">
+            <img class="icon" src="{{ current['icon'] }}" alt="Weather icon">
+            <p><strong>{{ current['name'] }}</strong></p>
+            <p>Current Temperature: {{ current['temperature'] }}°{{current['temperatureUnit']}}</p>
+            <p>Condition: {{ current['shortForecast'] }}</p>
+            <p>Wind Speed: {{ current['windSpeed'] }}</p>
+            <p>Wind Direction: {{ current['windDirection'] }}</p>
+            <p>Description: {{ current['detailedForecast'] }}</p>
+        </div>
+        <div class="forecast">
+            <h2>5-Day Forecast</h2>
+            {% for forecast in forecasts %}
+            <div class="forecast-item">
+                <img class="icon" src="{{ forecast['icon'] }}" alt="Weather icon">
+                <p><strong>{{ forecast['name'] }}:</strong> {{ forecast['shortForecast'] }}, Temp: {{
+                    forecast['temperature'] }}°C</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <a href="/" class="back-button">Search Another City</a>
+    </div>
+</body>
+
+</html>
