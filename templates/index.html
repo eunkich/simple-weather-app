@@ -9,11 +9,21 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f2f2f2;
+        }
+
+        .content {
+            flex: 1;
+            /* This makes sure the content area grows to fill the space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
         }
 
         .container {
@@ -22,6 +32,9 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            max-width: 500px;
+            box-sizing: border-box;
         }
 
         input[type="text"] {
@@ -44,17 +57,126 @@
         input[type="submit"]:hover {
             background-color: #45a049;
         }
+
+        footer {
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+            background-color: #f9f9f9;
+            border-top: 1px solid #e1e1e1;
+            position: relative;
+            display: none;
+            /* Hide the footer by default */
+        }
+
+        .highlight {
+            color: blue;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .highlight .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            /* Position the tooltip above the text */
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .highlight .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            /* At the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+
+        .highlight:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip-text img {
+            width: 50px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .info-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 20px auto;
+        }
+
+        .info-button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Weather Search</h1>
-        <form action="/weather" method="POST">
-            <input type="text" name="city" placeholder="Enter city name" required>
-            <input type="submit" value="Check Weather">
-        </form>
+    <div class="content">
+        <div class="container">
+            <h1>Weather Search</h1>
+            <form action="/weather" method="POST">
+                <input type="text" name="city"
+                    placeholder="Enter city name or use current location: ({{location['city'] }}, {{location['region']}})">
+                <input type="submit" value="Check Weather">
+            </form>
+            <button class="info-button" onclick="toggleFooter()">Info</button>
+        </div>
     </div>
+    <footer id="footer">
+        <p>Developed by Eunki Chung</p>
+        <p>This application is developed for a technical assessment and is not intended to be used as a final product,
+            although the weather information provided reflects actual forecasts.</p>
+        <p>
+            Check out <a href="https://www.linkedin.com/school/productmanagerinterview/" class="highlight"
+                target="_blank">PM Accelerator<span class="tooltip-text">
+                    <img src="https://media.licdn.com/dms/image/v2/C560BAQERjWEoRZ15Tg/company-logo_200_200/company-logo_200_200/0/1656545579397/productmanagerinterview_logo?e=1733356800&v=beta&t=BMjnsguwa62FcjEyMaBvY9CRW01aSi2MT3FTvgReMKs"
+                        alt="Logo"><br>
+                    PM Accelerator supports product management professionals at every stage of their career, from
+                    entry-level to VP of Product. Learn more on our LinkedIn page.
+                </span>
+            </a> for more information.
+        </p>
+    </footer>
+
+    <script>
+        function toggleFooter() {
+            var footer = document.getElementById("footer");
+            if (footer.style.display === "none" || footer.style.display === "") {
+                footer.style.display = "block";
+            } else {
+                footer.style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>

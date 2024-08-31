@@ -94,7 +94,8 @@
             {% for forecast in forecasts %}
             <div class="forecast-item">
                 <img class="icon" src="{{ forecast['icon'] }}" alt="Weather icon">
-                <p><strong>{{ forecast['name'] }}:</strong> {{ forecast['shortForecast'] }}, Temp: {{
+                <p><strong>{{ forecast['name'] }}:</strong> {{
+                    forecast['shortForecast'] }}, Temp: {{
                     forecast['temperature'] }}°C</p>
             </div>
             {% endfor %}

@@ -56,6 +56,7 @@ def get_weather_forecasts(latitude, longitude):
         print('Error:', response.status_code)
         return None
 
+from datetime import datetime
 
 def get_weather_info(city: str = None):
     latitude, longitude = get_coordinates(city)
@@ -69,9 +70,30 @@ def get_weather_info(city: str = None):
 
     for forecast in out['properties']['periods']:
         if 'Night' not in forecast['name'] and forecast['startTime'][:10] != today:
+            forecast_date = datetime.fromisoformat(forecast['startTime']).strftime("%m/%d/%Y")
+            forecast['name'] = f"({forecast_date}) {forecast['name']}"
             forecasts.append(forecast)
             count += 1
         if count == 5:
             break
+    date = datetime.fromisoformat(current['startTime']).strftime("%m/%d/%Y")
+    current['name'] = f"({date}) {current['name']}"
 
     return {'current': current, 'forecasts': forecasts}
+
+
+def get_ip():
+    response = requests.get('https://api64.ipify.org?format=json').json()
+    return response["ip"]
+
+
+def get_location():
+    ip_address = get_ip()
+    response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
+    location_data = {
+        "ip": ip_address,
+        "city": response.get("city"),
+        "region": response.get("region_code"),
+        "country": response.get("country_name")
+    }
+    return location_data
