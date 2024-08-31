@@ -1,10 +1,16 @@
 from flask import Flask, render_template, request
+from werkzeug.middleware.proxy_fix import ProxyFix
 from api import get_weather_info, get_location
 
 import logging
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
+
+
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 
 
 @app.route('/')
