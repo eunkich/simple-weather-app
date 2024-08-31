@@ -83,7 +83,7 @@
         <div class="weather-info">
             <img class="icon" src="{{ current['icon'] }}" alt="Weather icon">
             <p><strong>{{ current['name'] }}</strong></p>
-            <p>Current Temperature: {{ current['temperature'] }}°{{current['temperatureUnit']}}</p>
+            <p>Current Temperature: {{ current['temperature'] }}°{{ current['temperatureUnit'] }}</p>
             <p>Condition: {{ current['shortForecast'] }}</p>
             <p>Wind Speed: {{ current['windSpeed'] }}</p>
             <p>Wind Direction: {{ current['windDirection'] }}</p>
@@ -96,7 +96,7 @@
                 <img class="icon" src="{{ forecast['icon'] }}" alt="Weather icon">
                 <p><strong>{{ forecast['name'] }}:</strong> {{
                     forecast['shortForecast'] }}, Temp: {{
-                    forecast['temperature'] }}°C</p>
+                    forecast['temperature'] }}°{{ current['temperatureUnit'] }}</p>
             </div>
             {% endfor %}
         </div>

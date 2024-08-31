@@ -19,7 +19,6 @@
 
         .content {
             flex: 1;
-            /* This makes sure the content area grows to fill the space */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -68,7 +67,6 @@
             border-top: 1px solid #e1e1e1;
             position: relative;
             display: none;
-            /* Hide the footer by default */
         }
 
         .highlight {
@@ -88,7 +86,6 @@
             position: absolute;
             z-index: 1;
             bottom: 100%;
-            /* Position the tooltip above the text */
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: 10px;
@@ -100,7 +97,6 @@
             content: "";
             position: absolute;
             top: 100%;
-            /* At the bottom of the tooltip */
             left: 50%;
             margin-left: -5px;
             border-width: 5px;
@@ -144,8 +140,8 @@
         <div class="container">
             <h1>Weather Search</h1>
             <form action="/weather" method="POST">
-                <input type="text" name="city"
-                    placeholder="Enter city name or use current location: ({{location['city'] }}, {{location['region']}})">
+                <input id="city-input" type="text" name="city" placeholder="Enter city name or use current location">
+                <input type="hidden" id="city-input-curr-loc" name="curr_loc">
                 <input type="submit" value="Check Weather">
             </form>
             <button class="info-button" onclick="toggleFooter()">Info</button>
@@ -174,6 +170,57 @@
                 footer.style.display = "block";
             } else {
                 footer.style.display = "none";
+            }
+        }
+
+        window.onload = function () {
+            getLocation();
+        };
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            fetch('/location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    latitude: lat,
+                    longitude: lon
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("city-input").placeholder = `Enter city name or use current location; ${data.city}, ${data.state}`;
+                    document.getElementById("city-input-curr-loc").value = `${data.city}, ${data.state}`;
+                });
+        }
+
+        function showError(error) {
+            var locationElement = document.getElementById("location");
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    locationElement.innerHTML = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    locationElement.innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    locationElement.innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    locationElement.innerHTML = "An unknown error occurred.";
+                    break;
             }
         }
     </script>

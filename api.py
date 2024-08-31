@@ -94,15 +94,18 @@ def get_ip():
 
 def get_location():
     # ip_address = get_ip()
-    logger.info(request.headers)
-    logger.info(request)
-    logger.info(request.environ)
+    # logger.info(request.headers)
+    # logger.info(request)
+    # logger.info(request.environ)
+    # logger.info(requests.get('https://api64.ipify.org?format=json').json())
+    # logger.info(f"request.remote_addr: {request.remote_addr}")
+    # logger.info(f"request.remote_user: {request.remote_user}")
 
     if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
         ip_address = request.environ['REMOTE_ADDR']
     else:
         ip_address = request.environ['HTTP_X_FORWARDED_FOR'] # if behind a proxy
-    logger.info(ip_address)
+    # logger.info(ip_address)
     
     # ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()

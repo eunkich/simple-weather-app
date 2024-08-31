@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
-from api import get_weather_info, get_location
+from api import get_weather_info, get_point
 
 import logging
 
@@ -15,15 +15,26 @@ app.wsgi_app = ProxyFix(
 
 @app.route('/')
 def home():
-    data = get_location()
-    return render_template('index.html', location = data)
+    return render_template('index.html')
+
+@app.route('/location', methods=['POST'])
+def get_location():
+    data = request.json
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+
+    res = get_point(latitude, longitude)
+    if not res:
+        return None
+    res = res['properties']['relativeLocation']['properties']
+
+    return jsonify({'city': res['city'], 'state': res['state']})
 
 
 @app.route('/weather', methods=['POST'])
 def get_weather():
     if len(request.form['city'])==0:
-        location = get_location()
-        city = f"{location['city']}, {location['region']}"
+        city = request.form.get('curr_loc')
     else:
         city = request.form['city']
 
@@ -34,6 +45,7 @@ def get_weather():
         return render_template('result.html', city=city, error=True, error_message=str(e))
     except Exception as e:
         return render_template('result.html', city=city, error=True, error_message="An unexpected error occurred. Please try again.")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
