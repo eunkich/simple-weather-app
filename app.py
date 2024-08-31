@@ -30,7 +30,6 @@ def home():
 @app.route('/location', methods=['POST'])
 def get_location():
     if 'city' in session and 'state' in session:
-        print(session)
         return jsonify({'city': session['city'], 'state': session['state']})
     
     data = request.json
@@ -54,7 +53,10 @@ def get_weather():
     if len(request.form['city'])==0:
         city = request.form.get('curr_loc')
         if not city:
-            city = f"{session['city'], session['state']}"
+            if 'city' in session and 'state' in session:
+                city = f"{session['city'], session['state']}"
+            else:
+                city = f"Los Angeles, CA"
     else:
         city = request.form['city']
 
