@@ -94,6 +94,9 @@ def get_ip():
 
 def get_location():
     # ip_address = get_ip()
+    logger.info(request.headers)
+    logger.info(request)
+    logger.info(request.environ)
 
     if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
         ip_address = request.environ['REMOTE_ADDR']
