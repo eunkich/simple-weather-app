@@ -140,7 +140,7 @@
         <div class="container">
             <h1>Weather Search</h1>
             <form action="/weather" method="POST">
-                <input id="city-input" type="text" name="city" placeholder="Enter city name or use current location">
+                <input id="city-input" type="text" name="city" placeholder="{{ city_placeholder | e }}">
                 <input type="hidden" id="city-input-curr-loc" name="curr_loc">
                 <input type="submit" value="Check Weather">
             </form>
@@ -174,7 +174,21 @@
         }
 
         window.onload = function () {
-            getLocation();
+            // Step 1: Check if the location is already stored in the server-side session
+            fetch('/check-location', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.location_available) {
+                        // Step 2: Call getLocation() only if location is not already stored
+                        getLocation();
+                    }
+                })
+                .catch(err => console.error('Error checking location:', err));
         };
 
         function getLocation() {
