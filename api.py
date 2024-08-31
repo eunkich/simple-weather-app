@@ -97,6 +97,7 @@ def get_location():
         ip_address = ip_address.split(',')[0]
     else:
         ip_address = request.remote_addr
+    print(ip_address)
     # ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
     location_data = {
