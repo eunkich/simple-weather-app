@@ -3,6 +3,9 @@ import requests
 from flask import request
 from dotenv import dotenv_values
 
+import logging
+logger = logging.getLogger(__name__)
+
 config = dotenv_values(".env")
 
 
@@ -92,13 +95,13 @@ def get_ip():
 def get_location():
     # ip_address = get_ip()
     ip_address = request.headers.get('X-Forwarded-For')
-    print(ip_address)
+    logger.info(ip_address)
     
     if ip_address:
         ip_address = ip_address.split(',')[-1]
     else:
         ip_address = request.remote_addr
-    print(ip_address)
+    logger.info(ip_address)
     # ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
     location_data = {

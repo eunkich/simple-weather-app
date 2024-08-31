@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request
 from api import get_weather_info, get_location
 
+import logging
+
 app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 @app.route('/')
