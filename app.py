@@ -21,7 +21,6 @@ app.wsgi_app = ProxyFix(
 def home():
     if 'city' in session and 'state' in session:
         city_placeholder = f"Enter city name or use current location; {session['city']}, {session['state']}"
-        logging.info(city_placeholder)
     else:
         city_placeholder = "Enter city name or use current location"
     return render_template('index.html', city_placeholder=city_placeholder)
@@ -56,10 +55,15 @@ def get_weather():
             if 'city' in session and 'state' in session:
                 city = f"{session['city'], session['state']}"
             else:
-                city = f"Los Angeles, CA"
+                from flask import Response
+                return Response('City name not provided', 204)
+        
+        city = city.replace("(", '')
+        city = city.replace(")", '')
+        city = city.replace("'", '')
     else:
         city = request.form['city']
-
+    
     try:
         weather_data = get_weather_info(city)
         return render_template('result.html', city=city, current=weather_data['current'], forecasts=weather_data['forecasts'])
