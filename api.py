@@ -1,4 +1,6 @@
+from datetime import datetime
 import requests
+from flask import request
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
@@ -56,7 +58,6 @@ def get_weather_forecasts(latitude, longitude):
         print('Error:', response.status_code)
         return None
 
-from datetime import datetime
 
 def get_weather_info(city: str = None):
     latitude, longitude = get_coordinates(city)
@@ -70,7 +71,8 @@ def get_weather_info(city: str = None):
 
     for forecast in out['properties']['periods']:
         if 'Night' not in forecast['name'] and forecast['startTime'][:10] != today:
-            forecast_date = datetime.fromisoformat(forecast['startTime']).strftime("%m/%d/%Y")
+            forecast_date = datetime.fromisoformat(
+                forecast['startTime']).strftime("%m/%d/%Y")
             forecast['name'] = f"({forecast_date}) {forecast['name']}"
             forecasts.append(forecast)
             count += 1
@@ -88,7 +90,8 @@ def get_ip():
 
 
 def get_location():
-    ip_address = get_ip()
+    # ip_address = get_ip()
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
     location_data = {
         "ip": ip_address,
