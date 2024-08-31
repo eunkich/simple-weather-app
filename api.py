@@ -92,9 +92,10 @@ def get_ip():
 def get_location():
     # ip_address = get_ip()
     ip_address = request.headers.get('X-Forwarded-For')
+    print(ip_address)
     
     if ip_address:
-        ip_address = ip_address.split(',')[0]
+        ip_address = ip_address.split(',')[-1]
     else:
         ip_address = request.remote_addr
     print(ip_address)
